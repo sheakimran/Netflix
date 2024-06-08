@@ -39,3 +39,13 @@ jobs:
           docker push sheakimran21/netflix:latest  
         env:
           DOCKER_CLI_ACI: 1
+  deploy:    
+    needs: build-analyze-scan  
+    runs-on: [netflix]  
+    steps:
+      - name: Pull the docker image
+        run: docker pull sheakimran21/netflix:latest
+      - name: Trivy image scan
+        run: trivy image sheakimran21/netflix:latest
+      - name: Run the container netflix
+        run: docker run -d --name netflix -p 8081:80 sheakimran21/netflix:latest 
